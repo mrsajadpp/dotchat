@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn">Click</button>
+    <script>
+        let btn = document.getElementById('btn');
+        btn.addEventListener("click", () => {
+            Notification.requestPermission().then((params) => {
+                if (params === 'granted') {
+                    let notification = new Notification("Dotchat", {
+                        body: 'New message from sajad.',
+                        icon: '../assets/images/logo/favicon.png',
+                        sound: '../assets/audios/notification.mp3',
+                        silent: true
+                    });
+                    notification.addEventListener('show', function () {
+                        let audio = new Audio('../assets/audios/notification.mp3');
+                        audio.play();
+                    });
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
