@@ -14,6 +14,7 @@
         let btn = document.getElementById('btn');
         btn.addEventListener("click", () => {
             Notification.requestPermission().then((params) => {
+                alert(params)
                 if (params === 'granted') {
                     let notification = new Notification("Dotchat", {
                         body: 'New message from sajad.',
