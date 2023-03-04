@@ -42,9 +42,11 @@
 }
 
 .chats {
-    margin-top: 50px;
+    padding-top: 50px;
     overflow-x: hidden;
     overflow-y: scroll;
+    height: 100vh;
+    padding-bottom: 60px;
 }
 
 .input {

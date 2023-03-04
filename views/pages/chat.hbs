@@ -1,6 +1,6 @@
 <div class="details">
     <div class="profile">
-        <button><box-icon name='arrow-back' ></box-icon></button>
+        <button><box-icon name='arrow-back'></box-icon></button>
     </div>
     <div class="name">
         <span>Sajad</span>
@@ -9,29 +9,43 @@
         <button><box-icon name='dots-vertical'></box-icon></button>
     </div>
 </div>
-<snap-ui class="chats" contact="{{from}}">
-    <snap-message>Looks good! 😀</snap-message>
-    <snap-notice>Amanda took a screenshot!</snap-notice>
-    <snap-message from="{{from}}">I'm saving this for later!</snap-message>
+<snap-ui class="chats" id="chats" contact="{{from}}">
+    <snap-notice>{{from}} deleted a message!</snap-notice>
 </snap-ui>
 <div class="input">
-    <form class="message">
+    <form class="message" id="send" onsubmit="return false;">
         <button type="button"><box-icon name='paperclip'></box-icon></button>
-        <input type="text" placeholder="Message">
-        <button type="submit"><box-icon name='send' ></box-icon></button>
+        <input type="text" id="message" placeholder="Message" autofocus>
+        <button type="submit"><box-icon name='send'></box-icon></button>
     </form>
 </div>
 <script>
     const socket = io();
+    let chats = document.getElementById('chats');
+    let send = document.getElementById('send');
 
-    socket.emit('message', {
-        from: '{{userId}}',
-        to: 'Sajad',
-        content: 'Hi there im {{from}}',
-        date: new Date()
+    send.addEventListener("click", () => {
+        if (document.getElementById('message').value !== '') {
+            let snapMessage = document.createElement('snap-message');
+            snapMessage.innerHTML = document.getElementById('message').value;
+            chats.appendChild(snapMessage);
+            chats.scrollTop = chats.scrollHeight;
+            socket.emit('message', {
+                from: 'Saju',
+                to: '8943414105',
+                content: document.getElementById('message').value,
+                date: new Date()
+            })
+            document.getElementById('message').value = '';
+        }
     })
 
-    socket.on('{{userId}}', (data) => {
+    socket.on('8943414105', (data) => {
+        let snapMessage = document.createElement('snap-message');
+        snapMessage.from = data.from;
+        snapMessage.innerHTML = data.content;
+        chats.appendChild(snapMessage);
+        chats.scrollTop = chats.scrollHeight;
         Push.create("Dotchat", {
             body: 'A message from ' + data.from,
             icon: '/images/logo/favicon.png',
