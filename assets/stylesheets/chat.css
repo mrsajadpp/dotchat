@@ -1,0 +1,77 @@
+.details {
+    width: 100%;
+    height: 50px;
+    background-color: #f6f6f6;
+    position: fixed;
+    top: 0px;
+    display: flex;
+}
+
+.details .profile {
+    width: 40px;
+    height: 100%;
+}
+
+.details .profile button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+.details .name {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+.details .more {
+    width: 40px;
+    height: 100%;
+}
+
+.details .more button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+.chats {
+    margin-top: 50px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.input {
+    width: 100%;
+    height: 50px;
+    background-color: #f6f6f6;
+    position: fixed;
+    bottom: 0px;
+}
+
+.input .message {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+}
+
+.input .message button {
+    width: 60px;
+    border: none;
+    outline: none;
+}
+
+.input .message input {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    padding-left: 15px;
+    outline: none;
+}

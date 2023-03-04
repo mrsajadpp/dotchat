@@ -1,0 +1,47 @@
+<div class="details">
+    <div class="profile">
+        <button><box-icon name='arrow-back' ></box-icon></button>
+    </div>
+    <div class="name">
+        <span>Sajad</span>
+    </div>
+    <div class="more">
+        <button><box-icon name='dots-vertical'></box-icon></button>
+    </div>
+</div>
+<snap-ui class="chats" contact="{{from}}">
+    <snap-message>Looks good! 😀</snap-message>
+    <snap-notice>Amanda took a screenshot!</snap-notice>
+    <snap-message from="{{from}}">I'm saving this for later!</snap-message>
+</snap-ui>
+<div class="input">
+    <form class="message">
+        <button type="button"><box-icon name='paperclip'></box-icon></button>
+        <input type="text" placeholder="Message">
+        <button type="submit"><box-icon name='send' ></box-icon></button>
+    </form>
+</div>
+<script>
+    const socket = io();
+
+    socket.emit('message', {
+        from: '{{userId}}',
+        to: 'Sajad',
+        content: 'Hi there im {{from}}',
+        date: new Date()
+    })
+
+    socket.on('{{userId}}', (data) => {
+        Push.create("Dotchat", {
+            body: 'A message from ' + data.from,
+            icon: '/images/logo/favicon.png',
+            silent: true,
+            timeout: 4000,
+            onClick: function () {
+                socket.emit('notification-clicked', { message: 'Notification clicked!' });
+                window.focus();
+                this.close();
+            }
+        });
+    })
+</script>
