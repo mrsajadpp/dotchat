@@ -55,7 +55,6 @@
         snapMessage.from = 'Dot chat';
         chats.removeChild(snapLoader);
         chats.appendChild(snapMessage);
-        chats.scrollTop = chats.scrollHeight;
         Push.create("Dotchat", {
             body: 'Reply from dotchat',
             icon: '/images/logo/favicon.png',
@@ -72,6 +71,7 @@
         let i = 0;
         let intervalId = setInterval(() => {
             snapMessage.innerHTML += content.charAt(i);
+            chats.scrollTop = chats.scrollHeight;
             i++;
             if (i > content.length) {
                 clearInterval(intervalId);
