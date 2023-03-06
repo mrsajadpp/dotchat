@@ -41,40 +41,22 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('A user connected.');
 
-    // Initialize empty context object
-    let context = {};
-
     socket.on('message', async (data) => {
         const openai = new OpenAIApi(configuration);
-
-        // Add previous conversation context to the prompt if available
-        let prompt = data.content;
-        if (context[data.from]) {
-            prompt = context[data.from] + '\n' + prompt;
-        }
-
         const completion = await openai.createCompletion({
             model: "text-davinci-003",
-            prompt: prompt,
+            prompt: data.content,
             n: 1,
             max_tokens: 2049,
             stop: null,
             temperature: 0.7
         });
-
         if (completion.status == 200) {
-            if (completion.data.choices[0].text.length > 0) {
-                // Store the current conversation context
-                context[data.from] = prompt + '\n' + completion.data.choices[0].text;
-                socket.emit(data.from, { content: completion.data.choices[0].text })
-            } else {
-                socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." })
-            }
+            socket.emit(data.from, { content: completion.data.choices[0].text })
         } else {
             socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." })
         }
     })
-
 
     // Handle disconnections
     socket.on('disconnect', () => {
