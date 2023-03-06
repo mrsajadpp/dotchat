@@ -10,7 +10,7 @@
     </div>
 </div>
 <snap-ui class="chats" id="chats" contact="{{from}}">
-    <snap-notice>{{from}} deleted a message!</snap-notice>
+    <snap-notice>Dotchat is now online!</snap-notice>
 </snap-ui>
 <div class="input">
     <form class="message" id="send" onsubmit="return false;">
@@ -31,8 +31,7 @@
             chats.appendChild(snapMessage);
             chats.scrollTop = chats.scrollHeight;
             socket.emit('message', {
-                from: 'Saju',
-                to: '8943414105',
+                from: '8943414105',
                 content: document.getElementById('message').value,
                 date: new Date()
             })
@@ -42,7 +41,7 @@
 
     socket.on('8943414105', (data) => {
         let snapMessage = document.createElement('snap-message');
-        snapMessage.from = data.from;
+        snapMessage.from = 'Dot chat';
         snapMessage.innerHTML = data.content;
         chats.appendChild(snapMessage);
         chats.scrollTop = chats.scrollHeight;

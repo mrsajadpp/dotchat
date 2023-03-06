@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const app = express();
@@ -13,6 +14,10 @@ let handlebars = require('express-handlebars');
 let session = require('express-session');
 let fileUpload = require('express-fileupload');
 let favicon = require("serve-favicon");
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+    apiKey: process.env.API
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views/pages'));
@@ -36,8 +41,16 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('A user connected.');
 
-    socket.on('message', (data) => {
-        socket.emit(data.to, data)
+    socket.on('message', async (data) => {
+        const openai = new OpenAIApi(configuration);
+        const completion = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: data.content,
+            n: 1,
+            stop: null,
+            temperature: 0.7
+        });
+        socket.emit(data.from, { content: completion.data.choices[0].text })
     })
 
     // Handle disconnections
