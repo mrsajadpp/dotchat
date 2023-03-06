@@ -23,6 +23,7 @@
     const socket = io();
     let chats = document.getElementById('chats');
     let send = document.getElementById('send');
+    let userId = Math.random().toString();
 
     send.addEventListener("click", () => {
         if (document.getElementById('message').value !== '') {
@@ -31,15 +32,16 @@
             chats.appendChild(snapMessage);
             chats.scrollTop = chats.scrollHeight;
             socket.emit('message', {
-                from: '8943414105',
+                from: userId,
                 content: document.getElementById('message').value,
                 date: new Date()
             })
+            document.getElementById('message').readOnly = true;
             document.getElementById('message').value = '';
         }
     })
 
-    socket.on('8943414105', (data) => {
+    socket.on(userId, (data) => {
         let snapMessage = document.createElement('snap-message');
         snapMessage.from = 'Dot chat';
         snapMessage.innerHTML = data.content;
@@ -56,5 +58,6 @@
                 this.close();
             }
         });
+        document.getElementById('message').readOnly = false;
     })
 </script>

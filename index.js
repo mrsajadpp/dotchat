@@ -6,7 +6,7 @@ let path = require('path');
 let fs = require('fs');
 const socketio = require('socket.io');
 const server = http.createServer(app);
-const io = socketio(server); 
+const io = socketio(server);
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -51,7 +51,11 @@ io.on('connection', (socket) => {
             stop: null,
             temperature: 0.7
         });
-        socket.emit(data.from, { content: completion.data.choices[0].text })
+        if (completion.status == 200) {
+            socket.emit(data.from, { content: completion.data.choices[0].text })
+        } else {
+            socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." })
+        }
     })
 
     // Handle disconnections
