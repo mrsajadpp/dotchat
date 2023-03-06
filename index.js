@@ -47,6 +47,7 @@ io.on('connection', (socket) => {
             model: "text-davinci-003",
             prompt: data.content,
             n: 1,
+            max_tokens: 2049,
             stop: null,
             temperature: 0.7
         });
