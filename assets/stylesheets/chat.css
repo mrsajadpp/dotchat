@@ -103,7 +103,7 @@
 }
 
 @keyframes loadingB {
-    0 {
+    0% {
         width: 15px;
     }
 
