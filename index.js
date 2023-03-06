@@ -63,9 +63,13 @@ io.on('connection', (socket) => {
         });
 
         if (completion.status == 200) {
-            // Store the current conversation context
-            context[data.from] = prompt + '\n' + completion.data.choices[0].text;
-            socket.emit(data.from, { content: completion.data.choices[0].text })
+            if (completion.data.choices[0].text.length > 0) {
+                // Store the current conversation context
+                context[data.from] = prompt + '\n' + completion.data.choices[0].text;
+                socket.emit(data.from, { content: completion.data.choices[0].text })
+            } else {
+                socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." })
+            }
         } else {
             socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." })
         }
