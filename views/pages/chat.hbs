@@ -25,12 +25,20 @@
     let chats = document.getElementById('chats');
     let send = document.getElementById('send');
     let userId = Math.random().toString();
+    let snapLoader = document.createElement('snap-message');
+    snapLoader.from = 'Dot chat';
+    let loadWrapp = document.createElement('div');
+    loadWrapp.classList.add('load-wrapp');
+    loadWrapp.innerHTML = '<div class="load-2"><div class="line"></div><div class="line"></div><div class="line"></div></div>'
+
 
     send.addEventListener("click", () => {
         if (document.getElementById('message').value !== '') {
             let snapMessage = document.createElement('snap-message');
             snapMessage.innerHTML = document.getElementById('message').value;
             chats.appendChild(snapMessage);
+            snapLoader.appendChild(loadWrapp);
+            chats.appendChild(snapLoader)
             chats.scrollTop = chats.scrollHeight;
             socket.emit('message', {
                 from: userId,
@@ -45,6 +53,7 @@
     socket.on(userId, (data) => {
         let snapMessage = document.createElement('snap-message');
         snapMessage.from = 'Dot chat';
+        chats.removeChild(snapLoader);
         chats.appendChild(snapMessage);
         chats.scrollTop = chats.scrollHeight;
         Push.create("Dotchat", {
