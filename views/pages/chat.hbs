@@ -1,6 +1,7 @@
 <div class="details">
     <div class="profile">
-        <button onclick="location.href = 'https://github.com/mrsajadpp/dotchat' "><box-icon name='git-repo-forked'></box-icon></button>
+        <button onclick="location.href = 'https://github.com/mrsajadpp/dotchat' "><box-icon
+                name='git-repo-forked'></box-icon></button>
     </div>
     <div class="name">
         <span>Dotchat</span>
@@ -44,7 +45,6 @@
     socket.on(userId, (data) => {
         let snapMessage = document.createElement('snap-message');
         snapMessage.from = 'Dot chat';
-        snapMessage.innerHTML = data.content;
         chats.appendChild(snapMessage);
         chats.scrollTop = chats.scrollHeight;
         Push.create("Dotchat", {
@@ -58,6 +58,16 @@
                 this.close();
             }
         });
-        document.getElementById('message').readOnly = false;
+        let content = data.content;
+        let delay = 100; // milliseconds per character
+        let i = 0;
+        let intervalId = setInterval(() => {
+            snapMessage.innerHTML += content.charAt(i);
+            i++;
+            if (i > content.length) {
+                clearInterval(intervalId);
+                document.getElementById('message').readOnly = false;
+            }
+        }, delay);
     })
 </script>
