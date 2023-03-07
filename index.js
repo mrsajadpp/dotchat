@@ -18,6 +18,7 @@ const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
     apiKey: process.env.API
 });
+const openai = new OpenAIApi(configuration);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views/pages'));
@@ -61,16 +62,15 @@ io.on('connection', (socket) => {
     let context = {};
 
     socket.on('message', async (data) => {
-        const openai = new OpenAIApi(configuration);
-
         // To lowercase
         data.content = data.content.toLowerCase();
 
         // Add previous conversation context to the prompt if available
-        let prompt = data.content;
-        if (context[data.from]) {
-            prompt = prompt + ', Date: ' + data.date;
-        }
+        let prompt = data.content + ', Date: ' + data.date.toLocaleString();;
+        /*if (context[data.from]) {
+            prompt = prompt + ', Date: ' + data.date.toLocaleString();
+        }*/
+        console.log(data.date.toLocaleString())
 
         const completion = await openai.createCompletion({
             model: "text-davinci-003",
