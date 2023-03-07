@@ -39,12 +39,12 @@
             chats.appendChild(snapMessage);
             snapLoader.appendChild(loadWrapp);
             chats.appendChild(snapLoader)
-            chats.scrollTop = chats.scrollHeight;
             socket.emit('message', {
                 from: userId,
                 content: document.getElementById('message').value,
                 date: new Date()
             })
+            chats.scrollTop = chats.scrollHeight + 10;
             document.getElementById('message').readOnly = true;
             document.getElementById('message').value = '';
         }

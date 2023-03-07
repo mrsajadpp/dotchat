@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('A user connected.');
 
-    socket.on('message', async (data) => {
+    /*socket.on('message', async (data) => {
         const openai = new OpenAIApi(configuration);
         const completion = await openai.createCompletion({
             model: "text-davinci-003",
@@ -56,7 +56,49 @@ io.on('connection', (socket) => {
         } else {
             socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." })
         }
-    })
+    })*/
+    // Initialize empty context object
+    let context = {};
+
+    socket.on('message', async (data) => {
+        const openai = new OpenAIApi(configuration);
+
+        // Add previous conversation context to the prompt if available
+        let prompt = data.content;
+        if (context[data.from]) {
+            prompt = 'Conversation context :' + context[data.from] + ', Message: ' + prompt;
+        }
+
+        const completion = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: prompt,
+            n: 1,
+            max_tokens: 2049,
+            stop: null,
+            temperature: 0.7
+        });
+
+        if (completion.status == 200 || completion.data.choices[0].text) {
+            // Store the current conversation context
+            context[data.from] = prompt + '\n' + completion.data.choices[0].text;
+
+            // Send response based on previous message
+            if (data.content.split(' ').includes('hello')) {
+                socket.emit(data.from, { content: 'Hi there! How can I assist you?' });
+            } else if (data.content.split(' ').includes('bye')) {
+                socket.emit(data.from, { content: 'Goodbye! Have a nice day.' });
+            } else if (data.content.split(' ').includes('what') && data.content.split(' ').includes('your') && data.content.split(' ').includes('name')) {
+                socket.emit(data.from, { content: 'Iam dotchat powered by "Dot inc".' });
+            } else if (data.content.split(' ').includes('who') && data.content.split(' ').includes('your') && data.content.split(' ').includes('developer') || data.content.split(' ').includes('father')) {
+                socket.emit(data.from, { content: 'My father(developer) is sajad, Founder and CEO of "Dot inc".' });
+            } else {
+                socket.emit(data.from, { content: completion.data.choices[0].text });
+            }
+        } else {
+            socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." });
+        }
+    });
+
 
     // Handle disconnections
     socket.on('disconnect', () => {
