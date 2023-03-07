@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
         // Add previous conversation context to the prompt if available
         let prompt = data.content;
         if (context[data.from]) {
-            prompt = 'Context:' + context[data.from] + ', Rules: Must be ad <pre><code</code></pre> in code block' + ', Date: ' + data.date + ', Message: ' + prompt;
+            prompt = prompt + ', Date: ' + data.date;
         }
 
         const completion = await openai.createCompletion({
@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
 
         if (completion.status == 200 && completion.data.choices[0].text) {
             // Store the current conversation context
-            context[data.from] = prompt + '\n' + completion.data.choices[0].text;
+            //context[data.from] = prompt + '\n' + completion.data.choices[0].text;
 
             // Send response based on previous message
             if (data.content.split(' ').includes('hello') || data.content.split(' ').includes('hi') || data.content.split(' ').includes('hey')) {
