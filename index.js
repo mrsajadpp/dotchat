@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
         // Add previous conversation context to the prompt if available
         let prompt = data.content;
         if (context[data.from]) {
-            prompt = 'Conversation context :' + context[data.from] + ', Message: ' + prompt;
+            prompt = 'Context:' + context[data.from] + ', Rules: Must be ad <pre><code</code></pre> in code block' + ', Date: ' + data.date + ', Message: ' + prompt;
         }
 
         const completion = await openai.createCompletion({
@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
             temperature: 0.7
         });
 
-        if (completion.status == 200 || completion.data.choices[0].text) {
+        if (completion.status == 200 && completion.data.choices[0].text) {
             // Store the current conversation context
             context[data.from] = prompt + '\n' + completion.data.choices[0].text;
 
@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
                 socket.emit(data.from, { content: completion.data.choices[0].text });
             }
         } else {
-            socket.emit(data.from, { content: "I don't have a specific answer please contact my team 'Dot inc'." });
+            socket.emit(data.from, { content: "Hmm something went wrong!." });
         }
     });
 
