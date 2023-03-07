@@ -63,6 +63,9 @@ io.on('connection', (socket) => {
     socket.on('message', async (data) => {
         const openai = new OpenAIApi(configuration);
 
+        // To lowercase
+        data.content = data.content.toLowerCase();
+
         // Add previous conversation context to the prompt if available
         let prompt = data.content;
         if (context[data.from]) {
@@ -83,7 +86,7 @@ io.on('connection', (socket) => {
             context[data.from] = prompt + '\n' + completion.data.choices[0].text;
 
             // Send response based on previous message
-            if (data.content.split(' ').includes('hello')) {
+            if (data.content.split(' ').includes('hello') || data.content.split(' ').includes('hi') || data.content.split(' ').includes('hey')) {
                 socket.emit(data.from, { content: 'Hi there! How can I assist you?' });
             } else if (data.content.split(' ').includes('bye')) {
                 socket.emit(data.from, { content: 'Goodbye! Have a nice day.' });
